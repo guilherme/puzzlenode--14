@@ -119,9 +119,13 @@ class TweetStreamAnalysis
     output = ""
     active_profiles.each do |profile|
       output << "#{profile.name}\n"
-      build_friend_degrees_for(profile).each do |friend_list|
-        output << "#{friend_list.flatten!.collect(&:name).join(', ')}\n"
+      friend_degrees_list = build_friend_degrees_for(profile)
+      friend_degrees_list.each do |friend_list|
+        unless friend_list.flatten.empty?
+          output << "#{friend_list.flatten!.collect(&:name).join(', ')}\n" 
+        end
       end
+      output << "\n" unless profile == active_profiles.last
     end
     output
   end
@@ -145,6 +149,8 @@ end
 
 class TweetParser
 
+  class InvalidTweetFormat < StandardError; end
+
   attr_reader :mentions, :source, :tweet
 
   MENTION_REGEXP = /@[a-z_]*/
@@ -156,11 +162,11 @@ class TweetParser
 
 
   def self.parse!(tweet)
-    source = tweet.match(SOURCE_REGEXP)[1]
+    source = tweet.match(SOURCE_REGEXP)[1] rescue (raise InvalidTweetFormat, "It must be on the format: 'source_profile: message'")
     source = Profile.find_or_create(source)
+
     mentions = tweet.scan(MENTION_REGEXP)
     mentions.map! { |profile| Profile.find_or_create(profile) }
-    
     new(source,mentions, tweet)
   end
 
