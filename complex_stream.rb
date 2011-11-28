@@ -77,5 +77,4 @@ florence_vonrueden: The Germans regard Goethe with the same veneration we accord
 brook_metz: This is fundamentally a detective story, albeit a distinctly heterodox one /cc @darrel_skiles, @madelyn
 delaney_ferry: @lawson_brown: A preface or introduction}
 
-@analisys = TweetStreamAnalysis.new(stream)
-puts @analisys.to_s
+puts TweetStreamAnalysis.new(stream).to_s

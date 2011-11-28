@@ -4,12 +4,8 @@ class Profile
    @@instances = []
 
   attr_reader :name
-
   attr_accessor :tweets
 
-  def tweets
-    @tweets ||= 0
-  end
 
   def self.find_or_create(profile_string)
     @@instances.each do |instance|
@@ -23,6 +19,7 @@ class Profile
   def store!
     @@instances << self unless @@instances.include?(self)
   end
+
 
   def eql? other
     other.kind_of?(self.class) && self.name == other.name
@@ -38,6 +35,10 @@ class Profile
 
   def <=>(profile)
     self.name <=> profile.name
+  end
+
+  def tweets
+    @tweets ||= 0
   end
 
   def reciters
